@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorFondo">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarTareas"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimario"
+        app:titleTextColor="@android:color/white"
+        app:title="Mis Tareas"/>
+
+    <!-- FILTRO -->
+    <RadioGroup
+        android:id="@+id/radioFiltroTareas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:padding="8dp"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/radioTodas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Todas"
+            android:checked="true"
+            android:buttonTint="@color/colorPrimario"/>
+
+        <RadioButton
+            android:id="@+id/radioPendientes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pendientes"
+            android:layout_marginStart="12dp"
+            android:buttonTint="@color/colorPrimario"/>
+
+        <RadioButton
+            android:id="@+id/radioCompletadas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Completadas"
+            android:layout_marginStart="12dp"
+            android:buttonTint="@color/colorPrimario"/>
+    </RadioGroup>
+
+    <!-- LISTA -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerTareas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:clipToPadding="false"/>
+
+        <TextView
+            android:id="@+id/tvTareasVacio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="📋 No hay tareas aún\n\nToca el botón + para agregar"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone"
+            android:padding="32dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAgregarTarea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="@color/colorPrimario"
+            app:tint="@android:color/white"/>
+    </FrameLayout>
+
+</LinearLayout>
