@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_tareas"
+        android:title="Mis Tareas"
+        android:icon="@android:drawable/ic_menu_edit" />
+
+    <item
+        android:id="@+id/nav_apuntes"
+        android:title="Mis Apuntes"
+        android:icon="@android:drawable/ic_menu_save" />
+
+    <item
+        android:id="@+id/nav_perfil"
+        android:title="👤 Mi Perfil"
+        android:icon="@android:drawable/ic_menu_myplaces" />
+
+    <!-- ITEM ADMIN - SOLO VISIBLE PARA ADMINISTRADORES -->
+    <item
+        android:id="@+id/nav_admin"
+        android:title="Administrar Estudiantes"
+        android:icon="@android:drawable/ic_menu_manage" />
+
+    <item
+        android:id="@+id/nav_acerca"
+        android:title="Acerca de"
+        android:icon="@android:drawable/ic_menu_info_details" />
+
+    <item
+        android:id="@+id/nav_salir"
+        android:title="Cerrar Sesión"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel" />
+
+</menu>

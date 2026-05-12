@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private void validarLogin() {
         String correo = campoCorreo.getText() != null ? campoCorreo.getText().toString().trim() : "";
         String pass   = campoPassword.getText() != null ? campoPassword.getText().toString().trim() : "";
+        String rol = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EST_ROL));
 
         if (correo.isEmpty()) {
             campoCorreo.setError("Ingrese su correo");
@@ -82,12 +83,13 @@ public class MainActivity extends AppCompatActivity {
         if (cursor != null && cursor.moveToFirst()) {
             int id     = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EST_ID));
             String nom = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EST_NOMBRE));
+            String rol = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EST_ROL));
             cursor.close();
 
             SharedPreferences.Editor editor = getSharedPreferences("EduTaskPrefs", MODE_PRIVATE).edit();
             editor.putInt("estudianteId", id);
             editor.putString("estudianteNombre", nom);
-
+            editor.putString("rol", rol);
             if (checkRecordar.isChecked()) {
                 editor.putString("correo", correo);
                 editor.putString("password", pass);

@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_EST_CORREO   = "correo";
     public static final String COL_EST_PASSWORD  = "password";
     public static final String COL_EST_CEDULA   = "cedula";
+    public static final String COL_EST_ROL = "rol";
     public static final String COL_EST_ACTIVO   = "activo";
 
     // Tabla Categorías
@@ -72,6 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_EST_CORREO + " TEXT NOT NULL UNIQUE, " +
                 COL_EST_PASSWORD + " TEXT NOT NULL, " +
                 COL_EST_CEDULA + " TEXT, " +
+                COL_EST_ROL + " TEXT DEFAULT 'Estudiante', " +
                 COL_EST_ACTIVO + " INTEGER DEFAULT 1)");
 
         db.execSQL("CREATE TABLE " + TABLE_CATEGORIAS + " (" +
@@ -124,13 +126,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // ==================== ESTUDIANTES ====================
 
-    public long insertarEstudiante(String nombre, String correo, String password, String cedula) {
+    public long insertarEstudiante(String nombre, String correo, String password, String cedula, String rol) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COL_EST_NOMBRE, nombre);
         cv.put(COL_EST_CORREO, correo);
         cv.put(COL_EST_PASSWORD, password);
         cv.put(COL_EST_CEDULA, cedula);
+        cv.put(COL_EST_ROL, rol);
         cv.put(COL_EST_ACTIVO, 1);
         return db.insert(TABLE_ESTUDIANTES, null, cv);
     }
@@ -314,5 +317,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int eliminarApunte(int id) {
         SQLiteDatabase db = getWritableDatabase();
         return db.delete(TABLE_APUNTES, COL_APU_ID + "=?", new String[]{String.valueOf(id)});
+    }
+    // ADMINISTRACIÓN
+    public Cursor getAllEstudiantes() {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TABLE_ESTUDIANTES, null,
+                COL_EST_ACTIVO + "=1", null, null, null, COL_EST_ID + " DESC");
+    }
+    public Cursor getEstudiantePorCedula(String cedula) {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TABLE_ESTUDIANTES, null,
+                COL_EST_CEDULA + "=? AND " + COL_EST_ACTIVO + "=1",
+                new String[]{cedula}, null, null, null);
+    }
+
+    public int actualizarEstudianteCompleto(int id, String nombre, String password, String cedula, String rol) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_EST_NOMBRE, nombre);
+        cv.put(COL_EST_PASSWORD, password);
+        cv.put(COL_EST_CEDULA, cedula);
+        cv.put(COL_EST_ROL, rol);
+        return db.update(TABLE_ESTUDIANTES, cv, COL_EST_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    public String getRolEstudiante(int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_ESTUDIANTES, new String[]{COL_EST_ROL},
+                COL_EST_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+        String rol = "estudiante";
+        if (c.moveToFirst()) {
+            rol = c.getString(0);
+        }
+        c.close();
+        return rol;
     }
 }

@@ -25,6 +25,8 @@ public class RegistroActivity extends AppCompatActivity {
     private TextInputEditText campoCedula;
 
     private Spinner spinnerCarrera;
+    private Spinner spinnerRol;
+
     private RadioGroup radioGroupSexo;
     private TextView txtFechaNac;
 
@@ -48,6 +50,7 @@ public class RegistroActivity extends AppCompatActivity {
         campoCedula    = findViewById(R.id.campoCedula);
 
         spinnerCarrera  = findViewById(R.id.spinnerCarrera);
+        spinnerRol = findViewById(R.id.spinnerRol);
         radioGroupSexo  = findViewById(R.id.radioGroupSexo);
         txtFechaNac     = findViewById(R.id.txtFechaNac);
 
@@ -55,6 +58,7 @@ public class RegistroActivity extends AppCompatActivity {
         botonCancelar   = findViewById(R.id.botonCancelar);
 
         configurarSpinner();
+        configurarSpinnerRol();
         configurarFecha();
 
         botonRegistrar.setOnClickListener(v -> registrar());
@@ -79,7 +83,13 @@ public class RegistroActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCarrera.setAdapter(adapter);
     }
-
+    private void configurarSpinnerRol() {
+        String[] roles = {"estudiante", "administrador"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, roles);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRol.setAdapter(adapter);
+    }
     private void configurarFecha() {
         txtFechaNac.setOnClickListener(v -> {
             DatePickerFragment dp = new DatePickerFragment();
@@ -98,6 +108,7 @@ public class RegistroActivity extends AppCompatActivity {
         String password  = campoPassword.getText() != null ? campoPassword.getText().toString().trim() : "";
         String confirmar = campoConfirmar.getText() != null ? campoConfirmar.getText().toString().trim() : "";
         String cedula    = campoCedula.getText() != null ? campoCedula.getText().toString().trim() : "";
+        String rol       = spinnerRol.getSelectedItem() != null ? spinnerRol.getSelectedItem().toString() : "";
 
         if (nombre.isEmpty()) {
             campoNombre.setError("Ingrese su nombre");
@@ -146,7 +157,7 @@ public class RegistroActivity extends AppCompatActivity {
             campoCorreo.requestFocus(); return;
         }
 
-        long id = db.insertarEstudiante(nombre, correo, password, cedula);
+        long id = db.insertarEstudiante(nombre, correo, password, cedula, rol);
 
         if (id > 0) {
             Toast.makeText(this, "¡Registro exitoso! Ya puede iniciar sesión.", Toast.LENGTH_LONG).show();
