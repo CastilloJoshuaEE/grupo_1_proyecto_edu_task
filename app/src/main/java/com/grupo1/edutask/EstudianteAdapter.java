@@ -49,10 +49,10 @@ public class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vi
         holder.tvCedula.setText("📄 Cédula: " + e.getCedula());
         
         if (e.getRol().equals("administrador")) {
-            holder.tvRol.setText("👑 Administrador");
+            holder.tvRolTexto.setText("👑 Administrador");
             holder.tvRol.setCardBackgroundColor(holder.itemView.getContext().getColor(R.color.colorPrimario));
         } else {
-            holder.tvRol.setText("📚 Estudiante");
+            holder.tvRolTexto.setText("📚 Estudiante");
             holder.tvRol.setCardBackgroundColor(holder.itemView.getContext().getColor(R.color.colorSecundario));
         }
 
@@ -66,17 +66,18 @@ public class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vi
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre, tvCorreo, tvCedula;
+        TextView tvNombre, tvCorreo, tvCedula, tvRolTexto;
         CardView tvRol;
         ImageButton btnEditar, btnEliminar;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNombre = itemView.findViewById(R.id.tvNombreEstudiante);
-            tvCorreo = itemView.findViewById(R.id.tvCorreoEstudiante);
-            tvCedula = itemView.findViewById(R.id.tvCedulaEstudiante);
-            tvRol = itemView.findViewById(R.id.tvRolEstudiante);
-            btnEditar = itemView.findViewById(R.id.btnEditarEstudiante);
+            tvNombre   = itemView.findViewById(R.id.tvNombreEstudiante);
+            tvCorreo   = itemView.findViewById(R.id.tvCorreoEstudiante);
+            tvCedula   = itemView.findViewById(R.id.tvCedulaEstudiante);
+            tvRol      = itemView.findViewById(R.id.tvRolEstudiante);
+            tvRolTexto = itemView.findViewById(R.id.tvRolTexto);
+            btnEditar  = itemView.findViewById(R.id.btnEditarEstudiante);
             btnEliminar = itemView.findViewById(R.id.btnEliminarEstudiante);
         }
     }

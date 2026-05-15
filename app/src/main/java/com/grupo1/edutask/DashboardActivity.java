@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +75,8 @@ public class DashboardActivity extends AppCompatActivity {
                 abrirTareas();
             } else if (id == R.id.nav_apuntes) {
                 abrirApuntes();
+            } else if (id == R.id.nav_recordatorios) {
+                abrirRecordatorios();
             } else if (id == R.id.nav_perfil) {
                 abrirPerfil();
             } else if (id == R.id.nav_admin) { 
@@ -91,12 +94,14 @@ public class DashboardActivity extends AppCompatActivity {
         CardView cardApuntes  = findViewById(R.id.cardApuntes);
         CardView cardPerfil   = findViewById(R.id.cardPerfil);
         CardView cardCerrar   = findViewById(R.id.cardCerrar);
-        CardView cardAdmin    = findViewById(R.id.cardAdmin); 
+        CardView cardAdmin    = findViewById(R.id.cardAdmin);
+        CardView cardRecordatorios = findViewById(R.id.cardRecordatorios);
 
         cardTareas.setOnClickListener(v -> abrirTareas());
         cardApuntes.setOnClickListener(v -> abrirApuntes());
         cardPerfil.setOnClickListener(v -> abrirPerfil());
         cardCerrar.setOnClickListener(v -> confirmarCerrarSesion());
+        if (cardRecordatorios != null) cardRecordatorios.setOnClickListener(v -> abrirRecordatorios());
 
         // Control de visibilidad de la tarjeta de admin
         if (cardAdmin != null) {
@@ -111,6 +116,10 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void abrirApuntes() {
         startActivity(new Intent(this, ApuntesActivity.class));
+    }
+
+    private void abrirRecordatorios() {
+        startActivity(new Intent(this, RecordatoriosActivity.class));
     }
 
     private void abrirPerfil() {

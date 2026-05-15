@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ApunteAdapter extends RecyclerView.Adapter<ApunteAdapter.VH> {
 
-    public interface OnEditListenera   { void onEdit(ApunteItem a); }
+    public interface OnEditListener    { void onEdit(ApunteItem a); }
     public interface OnDeleteListener { void onDelete(ApunteItem a); }
 
     private final List<ApunteItem> lista;

@@ -12,6 +12,11 @@
         android:icon="@android:drawable/ic_menu_save" />
 
     <item
+        android:id="@+id/nav_recordatorios"
+        android:title="🔔 Mis Recordatorios"
+        android:icon="@android:drawable/ic_menu_agenda" />
+
+    <item
         android:id="@+id/nav_perfil"
         android:title="👤 Mi Perfil"
         android:icon="@android:drawable/ic_menu_myplaces" />

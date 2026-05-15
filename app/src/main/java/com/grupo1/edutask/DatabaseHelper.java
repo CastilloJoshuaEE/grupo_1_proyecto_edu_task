@@ -12,7 +12,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "edutask.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     // Tabla Estudiantes
     public static final String TABLE_ESTUDIANTES = "estudiantes";
@@ -51,6 +51,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_APU_CAT_ID   = "categoria_id";
     public static final String COL_APU_TAR_ID   = "tarea_id";
     public static final String COL_APU_EST_ID   = "estudiante_id";
+
+    // Tabla Recordatorios
+    public static final String TABLE_RECORDATORIOS = "recordatorios";
+    public static final String COL_REC_ID          = "id";
+    public static final String COL_REC_MENSAJE      = "mensaje";
+    public static final String COL_REC_FECHA        = "fecha";
+    public static final String COL_REC_HORA         = "hora";
+    public static final String COL_REC_EST_ID       = "estudiante_id";
 
     private static DatabaseHelper instance;
 
@@ -107,6 +115,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(" + COL_APU_TAR_ID + ") REFERENCES " + TABLE_TAREAS + "(" + COL_TAR_ID + "), " +
                 "FOREIGN KEY(" + COL_APU_EST_ID + ") REFERENCES " + TABLE_ESTUDIANTES + "(" + COL_EST_ID + "))");
 
+        db.execSQL("CREATE TABLE " + TABLE_RECORDATORIOS + " (" +
+                COL_REC_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_REC_MENSAJE + " TEXT NOT NULL, " +
+                COL_REC_FECHA + " TEXT, " +
+                COL_REC_HORA + " TEXT, " +
+                COL_REC_EST_ID + " INTEGER, " +
+                "FOREIGN KEY(" + COL_REC_EST_ID + ") REFERENCES " + TABLE_ESTUDIANTES + "(" + COL_EST_ID + "))");
+
         // Categorías por defecto
         db.execSQL("INSERT INTO " + TABLE_CATEGORIAS + " (" + COL_CAT_NOMBRE + "," + COL_CAT_COLOR + "," + COL_CAT_EST_ID + ") VALUES ('Matemáticas','#F44336',NULL)");
         db.execSQL("INSERT INTO " + TABLE_CATEGORIAS + " (" + COL_CAT_NOMBRE + "," + COL_CAT_COLOR + "," + COL_CAT_EST_ID + ") VALUES ('Programación','#2196F3',NULL)");
@@ -117,6 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECORDATORIOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_APUNTES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAREAS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIAS);
@@ -351,5 +368,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         c.close();
         return rol;
+    }
+
+    // ==================== RECORDATORIOS ====================
+
+    public long insertarRecordatorio(String mensaje, String fecha, String hora, int estId) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_REC_MENSAJE, mensaje);
+        cv.put(COL_REC_FECHA, fecha);
+        cv.put(COL_REC_HORA, hora);
+        cv.put(COL_REC_EST_ID, estId);
+        return db.insert(TABLE_RECORDATORIOS, null, cv);
+    }
+
+    public Cursor getRecordatorios(int estId) {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TABLE_RECORDATORIOS, null,
+                COL_REC_EST_ID + "=?", new String[]{String.valueOf(estId)},
+                null, null, COL_REC_FECHA + " ASC, " + COL_REC_HORA + " ASC");
+    }
+
+    public int actualizarRecordatorio(int id, String mensaje, String fecha, String hora) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_REC_MENSAJE, mensaje);
+        cv.put(COL_REC_FECHA, fecha);
+        cv.put(COL_REC_HORA, hora);
+        return db.update(TABLE_RECORDATORIOS, cv, COL_REC_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    public int eliminarRecordatorio(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_RECORDATORIOS, COL_REC_ID + "=?", new String[]{String.valueOf(id)});
     }
 }
