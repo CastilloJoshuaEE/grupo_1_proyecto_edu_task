@@ -61,6 +61,7 @@
             android:name=".RecordatoriosActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CategoriasActivity" android:exported="false" />
     </application>
 
 </manifest>

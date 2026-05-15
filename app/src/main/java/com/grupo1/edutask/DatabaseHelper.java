@@ -233,6 +233,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         c.close();
         return id;
     }
+    //
+    // Actualizar una categoría existente (CRUD - Actualizar)
+    public int actualizarCategoria(int id, String nombre) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_CAT_NOMBRE, nombre);
+        // Nota: Si en el diálogo manejas color, puedes agregar: cv.put(COL_CAT_COLOR, color);
+        return db.update(TABLE_CATEGORIAS, cv, COL_CAT_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    // Eliminar una categoría (CRUD - Eliminar)
+    public int eliminarCategoria(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        // Al eliminar, las tareas asociadas quedarán con categoria_id en NULL o puedes decidir borrarlas.
+        return db.delete(TABLE_CATEGORIAS, COL_CAT_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+
+
+    //
 
     // ==================== TAREAS ====================
 
@@ -289,7 +309,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         return db.delete(TABLE_TAREAS, COL_TAR_ID + "=?", new String[]{String.valueOf(id)});
     }
+        //
+        // Obtener tareas filtradas por una categoría específica (Filtros)
+        public Cursor getTareasPorCategoria(int estId, int catId) {
+            SQLiteDatabase db = getReadableDatabase();
+            return db.rawQuery(
+                    "SELECT t.*, c." + COL_CAT_NOMBRE + " as cat_nombre FROM " + TABLE_TAREAS + " t " +
+                            "LEFT JOIN " + TABLE_CATEGORIAS + " c ON t." + COL_TAR_CAT_ID + "=c." + COL_CAT_ID +
+                            " WHERE t." + COL_TAR_EST_ID + "=? AND t." + COL_TAR_CAT_ID + "=? " +
+                            "ORDER BY t." + COL_TAR_COMPLETADA + " ASC, t." + COL_TAR_FECHA + " ASC",
+                    new String[]{String.valueOf(estId), String.valueOf(catId)});
+        }
 
+
+        //
     // ==================== APUNTES ====================
 
     public long insertarApunte(String titulo, String contenido, String fecha, int catId, int tarId, int estId) {
