@@ -32,9 +32,9 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         SharedPreferences prefs = getSharedPreferences("EduTaskPrefs", MODE_PRIVATE);
-        estudianteId     = prefs.getInt("estudianteId", -1);
+        estudianteId = prefs.getInt("estudianteId", -1);
         estudianteNombre = prefs.getString("estudianteNombre", "Estudiante");
-        String rol = prefs.getString("rol", "estudiante"); 
+        String rol = prefs.getString("rol", "estudiante");
 
         if (estudianteId == -1) {
             startActivity(new Intent(this, MainActivity.class));
@@ -45,65 +45,98 @@ public class DashboardActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawerLayout   = findViewById(R.id.drawerLayout);
+        drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar,
-                R.string.nav_open, R.string.nav_close);
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.nav_open,
+                R.string.nav_close
+        );
+
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Nombre en el header del nav
         TextView tvNombreNav = navigationView.getHeaderView(0).findViewById(R.id.tvNombreNav);
-        if (tvNombreNav != null) tvNombreNav.setText(estudianteNombre);
+        if (tvNombreNav != null) {
+            tvNombreNav.setText(estudianteNombre);
+        }
 
         TextView tvBienvenida = findViewById(R.id.tvBienvenida);
         tvBienvenida.setText("¡Hola, " + estudianteNombre + "!");
 
-        // CONTROL DE ACCESO POR ROL - OCULTAR/MOSTRAR OPCIÓN ADMIN
         Menu menu = navigationView.getMenu();
         MenuItem itemAdmin = menu.findItem(R.id.nav_admin);
+
         if (itemAdmin != null) {
             itemAdmin.setVisible(rol.equals("administrador"));
         }
 
         navigationView.setNavigationItemSelectedListener(item -> {
             drawerLayout.closeDrawer(GravityCompat.START);
+
             int id = item.getItemId();
+
             if (id == R.id.nav_tareas) {
                 abrirTareas();
+
             } else if (id == R.id.nav_apuntes) {
                 abrirApuntes();
+
             } else if (id == R.id.nav_recordatorios) {
                 abrirRecordatorios();
+
             } else if (id == R.id.nav_perfil) {
                 abrirPerfil();
-            } else if (id == R.id.nav_admin) { 
+
+            } else if (id == R.id.nav_admin) {
                 abrirAdminEstudiantes();
+
             } else if (id == R.id.nav_acerca) {
                 AcercaDeDialog.newInstance().show(getSupportFragmentManager(), "AcercaDe");
+
             } else if (id == R.id.nav_salir) {
                 confirmarCerrarSesion();
             }
+
             return true;
         });
 
         // Cards del dashboard
-        CardView cardTareas   = findViewById(R.id.cardTareas);
-        CardView cardApuntes  = findViewById(R.id.cardApuntes);
-        CardView cardPerfil   = findViewById(R.id.cardPerfil);
-        CardView cardCerrar   = findViewById(R.id.cardCerrar);
-        CardView cardAdmin    = findViewById(R.id.cardAdmin);
+        CardView cardTareas = findViewById(R.id.cardTareas);
+        CardView cardApuntes = findViewById(R.id.cardApuntes);
+        CardView cardCategorias = findViewById(R.id.cardCategorias);
+        CardView cardPerfil = findViewById(R.id.cardPerfil);
+        CardView cardCerrar = findViewById(R.id.cardCerrar);
+        CardView cardAdmin = findViewById(R.id.cardAdmin);
         CardView cardRecordatorios = findViewById(R.id.cardRecordatorios);
 
-        cardTareas.setOnClickListener(v -> abrirTareas());
-        cardApuntes.setOnClickListener(v -> abrirApuntes());
-        cardPerfil.setOnClickListener(v -> abrirPerfil());
-        cardCerrar.setOnClickListener(v -> confirmarCerrarSesion());
-        if (cardRecordatorios != null) cardRecordatorios.setOnClickListener(v -> abrirRecordatorios());
+        if (cardTareas != null) {
+            cardTareas.setOnClickListener(v -> abrirTareas());
+        }
 
-        // Control de visibilidad de la tarjeta de admin
+        if (cardApuntes != null) {
+            cardApuntes.setOnClickListener(v -> abrirApuntes());
+        }
+
+        if (cardCategorias != null) {
+            cardCategorias.setOnClickListener(v -> abrirCategorias());
+        }
+
+        if (cardPerfil != null) {
+            cardPerfil.setOnClickListener(v -> abrirPerfil());
+        }
+
+        if (cardCerrar != null) {
+            cardCerrar.setOnClickListener(v -> confirmarCerrarSesion());
+        }
+
+        if (cardRecordatorios != null) {
+            cardRecordatorios.setOnClickListener(v -> abrirRecordatorios());
+        }
+
         if (cardAdmin != null) {
             cardAdmin.setVisibility(rol.equals("administrador") ? View.VISIBLE : View.GONE);
             cardAdmin.setOnClickListener(v -> abrirAdminEstudiantes());
@@ -118,6 +151,10 @@ public class DashboardActivity extends AppCompatActivity {
         startActivity(new Intent(this, ApuntesActivity.class));
     }
 
+    private void abrirCategorias() {
+        startActivity(new Intent(this, CategoriasActivity.class));
+    }
+
     private void abrirRecordatorios() {
         startActivity(new Intent(this, RecordatoriosActivity.class));
     }
@@ -126,7 +163,7 @@ public class DashboardActivity extends AppCompatActivity {
         startActivity(new Intent(this, PerfilActivity.class));
     }
 
-    private void abrirAdminEstudiantes() { 
+    private void abrirAdminEstudiantes() {
         startActivity(new Intent(this, AdminEstudiantesActivity.class));
     }
 
@@ -141,20 +178,23 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void cerrarSesion() {
         SharedPreferences.Editor editor = getSharedPreferences("EduTaskPrefs", MODE_PRIVATE).edit();
+
         editor.remove("estudianteId");
         editor.remove("estudianteNombre");
         editor.remove("correo");
         editor.remove("password");
-        editor.remove("rol");  
+        editor.remove("rol");
         editor.apply();
+
         Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
